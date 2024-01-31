@@ -47,13 +47,19 @@ router.get('/login', (req, res) => {
 
 
 router.post('/login', async (req, res) => {
-    const token = await authService.login(req.body)
 
-    if (!token) {
-        return res.render('user/login', { error: "Email or Password is invalid!" });
+    try {
+        const token = await authService.login(req.body)
+
+        if (!token) {
+            return res.render('user/login', { error: "Email or Password is invalid!" });
+        }
+        res.cookie(sessionName, token, { httpOnly: true })
+        res.redirect('/');
+    } catch (err) {
+        return res.render('user/login', { error: err })
     }
-    res.cookie(sessionName, token, { httpOnly: true })
-    res.redirect('/');
+
 })
 
 router.get('/logout', (req, res) => {

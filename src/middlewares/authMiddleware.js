@@ -14,8 +14,8 @@ exports.auth = async (req, res, next) => {
             req.user = decodedToken;
             res.locals.user = decodedToken;
         } catch (err) {
-            console.log(err);
-            return res.redirect('/404');
+
+            return res.render('404', { error: err });
         }
     }
     next()
@@ -24,7 +24,7 @@ exports.auth = async (req, res, next) => {
 
 exports.isAuth = (req, res, next) => {
     if (!req.user) {
-        res.redirect('/404')
+        return res.redirect('/404')
     }
     next()
 }
